@@ -10,7 +10,7 @@
   "extends": "eslint:recommended",
   "rules": {
     "indent": [
-      "warn",
+      "error",
       2
     ],
     "linebreak-style": [
@@ -18,7 +18,7 @@
       "unix"
     ],
     "quotes": [
-      "warn",
+      "error",
       "single"
     ],
     "semi": [

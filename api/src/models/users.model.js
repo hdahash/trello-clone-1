@@ -1,36 +1,27 @@
-// users-model.js - A mongoose model
+/* eslint-disable no-console */
+
+// users-model.js - A KnexJS
 //
-// See http://mongoosejs.com/docs/models.html
+// See http://knexjs.org/
 // for more of what you can do here.
-module.exports = function (app) {
-  const mongooseClient = app.get('mongooseClient');
-  const users = new mongooseClient.Schema({
+//const Joi = require('joi');
+module.exports = function(app) {
+  const db = app.get("knexClient");
+  const tableName = "users";
+  db.schema.hasTable(tableName).then(exists => {
+    if (!exists) {
+      db.schema
+        .createTable(tableName, table => {
+          table.increments("id");
 
-    email: {
-      type: String,
-      unique: true,
-      lowercase: true,
-      required: true,
-      match: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    },
-    password: {
-      type: String,
-      required: true,
-      minlength: 8
-    },
-    active: {
-      type: Boolean,
-      required: true
-    },
-    displayname: {
-      type: String,
-      required: true
+          table.string("email").unique();
+          //email: Joi.string().email({ minDomainAtoms: 2 }).required().
+          table.string("password");
+        })
+        .then(() => console.log(`Created ${tableName} table`))
+        .catch(e => console.error(`Error creating ${tableName} table`, e));
     }
-
-
-  }, {
-    timestamps: true
   });
 
-  return mongooseClient.model('users', users);
+  return db;
 };

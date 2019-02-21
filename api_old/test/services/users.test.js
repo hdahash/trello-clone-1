@@ -9,18 +9,18 @@ describe('\'users\' service', () => {
   });
 });
 
-const db = require('../../src/models/users.model');
-//let User = app.get('mongooseClient').model('users', createModel.users);
+const createModel = require('../../src/models/users.model');
+let User = app.get('mongooseClient').model('users', createModel.users);
 let chai = require('chai');
 let chaiHttp = require('chai-http');
-db(app)('users').truncate();
+
 chai.use(chaiHttp);
 
 describe('Users', () => {
   before(done => {
-    //db.db.schema.truncateTable('users'); //.remove({}, () => {
-    done();
-    //});
+    User.remove({}, () => {
+      done();
+    });
   });
   // describe('/GET user', () => {
   //   it('it should GET all the users', (done) => {
